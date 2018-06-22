@@ -1,4 +1,4 @@
-package com.hai.apt.annotations;
+package com.hai.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,8 +10,8 @@ import java.lang.annotation.Target;
  * create by huanghp at 2018/6/20
  * email 1132760021@qq.com
  */
-@Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
+@Retention(RetentionPolicy.SOURCE)
 public @interface NewClass {
-    int value();
+    int value() default 0;
 }

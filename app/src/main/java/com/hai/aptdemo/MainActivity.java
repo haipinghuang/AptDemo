@@ -3,6 +3,9 @@ package com.hai.aptdemo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.hai.annotation.NewClass;
+
+@NewClass
 public class MainActivity extends AppCompatActivity {
 
     @Override
