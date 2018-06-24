@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * email 1132760021@qq.com
  */
 @Target(ElementType.TYPE)
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 public @interface NewClass {
     int value() default 0;
 }
