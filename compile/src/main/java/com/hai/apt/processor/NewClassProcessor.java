@@ -29,6 +29,7 @@ import javax.tools.JavaFileObject;
 public class NewClassProcessor extends AbstractProcessor {
     private static final String TAG = "NewClassProcessor";
     private String packageName;
+    public static final String PROXY = "Proxy";
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
@@ -37,7 +38,6 @@ public class NewClassProcessor extends AbstractProcessor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        System.out.println(TAG + " getSupportedAnnotationTypes() called");
         Set<String> set = new LinkedHashSet<>();
         set.add(NewClass.class.getCanonicalName());
         return set;
@@ -45,7 +45,6 @@ public class NewClassProcessor extends AbstractProcessor {
 
     @Override
     public SourceVersion getSupportedSourceVersion() {
-//        return super.getSupportedSourceVersion();
         return SourceVersion.latestSupported();
     }
 
@@ -57,21 +56,24 @@ public class NewClassProcessor extends AbstractProcessor {
             if (element.getKind() == ElementKind.CLASS) {
                 ExecutableElement executableElement = (ExecutableElement) element;
                 TypeElement classElement = (TypeElement) executableElement.getEnclosingElement();
+                //full class name
                 String qfClassName = classElement.getQualifiedName().toString();
+                String className = classElement.getSimpleName().toString();
                 PackageElement packageElement = processingEnv.getElementUtils().getPackageOf(classElement);
+                //package name
                 String packageName = packageName = packageElement.getQualifiedName().toString();
                 System.out.println("className=" + qfClassName);
                 System.out.println("packageName=" + packageName);
 
                 try {
-                    JavaFileObject sourceFile = processingEnv.getFiler().createSourceFile(packageName + "." + "MyTest", executableElement.getEnclosingElement());
+                    JavaFileObject sourceFile = processingEnv.getFiler().createSourceFile(packageName + "." + className + "$$" + PROXY, classElement);
                     Writer writer = sourceFile.openWriter();
-                    writer.write(getJavaCode());
+                    writer.write(getJavaCode(className + "$$" + PROXY));
                     writer.flush();
                     writer.close();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    error("generate java code error="+e.getLocalizedMessage());
+                    error("generate java code error=" + e.getLocalizedMessage());
                 }
             }
         }
@@ -79,22 +81,25 @@ public class NewClassProcessor extends AbstractProcessor {
         return true;
     }
 
-    public String getJavaCode() {
+    public String getJavaCode(String proxyName) {
         StringBuilder builder = new StringBuilder();
         builder.append("// Generated code. Do not modify!\n");
         builder.append("package ").append(packageName).append(";\n\n");
 //        builder.append("import com.zhy.m.permission.*;\n");
         builder.append('\n');
-        builder.append("public class ").append("MyTest");
-        builder.append(" {\n");
-
-//        generateMethods(builder);
-//        builder.append('\n');
-
+        builder.append("public class ").append(proxyName).append(" {\n");
+        generateMethod(builder);
         builder.append("}\n");
 
         return builder.toString();
     }
+
+    private void generateMethod(StringBuilder builder) {
+        builder.append("public String getString(){\n");
+        builder.append("return this is zhe msg returned;");
+        builder.append("}\n");
+    }
+
 
     private void error(String msg) {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, msg);

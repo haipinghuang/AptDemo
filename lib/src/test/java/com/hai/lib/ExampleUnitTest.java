@@ -1,4 +1,4 @@
-package com.hai.aptdemo;
+package com.hai.lib;
 
 import org.junit.Test;
 
@@ -13,7 +13,5 @@ public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
-
-        System.out.println("mychina".substring(3));
     }
 }
