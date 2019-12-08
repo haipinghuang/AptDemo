@@ -2,7 +2,9 @@ apply plugin: 'java-library'
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.google.auto.service:auto-service:1.0-rc2' //引入abstractProcessor
+    implementation 'com.google.auto.service:auto-service:1.0-rc6' //引入abstractProcessor
+    //gradle:3.5以后需要加上下面这行，参考https://www.cnblogs.com/mengshu-lbq/p/11713397.html
+    annotationProcessor 'com.google.auto.service:auto-service:1.0-rc6'
 //    compile 'com.squareup:javapoet:1.0.0'
     implementation project(':annotation')
 }
